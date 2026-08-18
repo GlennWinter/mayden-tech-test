@@ -5,4 +5,8 @@ use App\Http\Controllers\ShoppingListItemController;
 use Illuminate\Support\Facades\Route;
 
 Route::apiResource('shopping-lists', ShoppingListController::class);
-Route::apiResource('shopping-lists.items', ShoppingListItemController::class);
+Route::apiResource(
+    'shopping-lists.items',
+    ShoppingListItemController::class)
+    ->except(['show'])
+    ->scoped();

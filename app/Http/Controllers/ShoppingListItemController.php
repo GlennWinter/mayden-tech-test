@@ -27,7 +27,7 @@ class ShoppingListItemController extends Controller
         return response()->json($item, 201);
     }
 
-    public function update(Request $request, ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
+    public function update(Request $request, ShoppingListItem $item): JsonResponse
     {
         $validated = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'max:255'],
@@ -42,7 +42,7 @@ class ShoppingListItemController extends Controller
 
     // todo: add show function for individual item
 
-    public function destroy(ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
+    public function destroy(ShoppingListItem $item): JsonResponse
     {
         $item->delete();
 
