@@ -20,6 +20,7 @@ class ShoppingListItemController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'quantity' => ['required', 'integer', 'min:1'],
+            'price_in_pence' => ['required', 'integer', 'min:0'],
         ]);
 
         $item = $shoppingList->items()->create($validated);
@@ -27,11 +28,12 @@ class ShoppingListItemController extends Controller
         return response()->json($item, 201);
     }
 
-    public function update(Request $request, ShoppingListItem $item): JsonResponse
+    public function update(Request $request, ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
     {
         $validated = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'quantity' => ['sometimes', 'required', 'integer', 'min:1'],
+            'price_in_pence' => ['sometimes', 'integer', 'min:0'],
             'is_purchased' => ['sometimes', 'boolean'],
         ]);
 
@@ -42,7 +44,7 @@ class ShoppingListItemController extends Controller
 
     // todo: add show function for individual item
 
-    public function destroy(ShoppingListItem $item): JsonResponse
+    public function destroy(ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
     {
         $item->delete();
 

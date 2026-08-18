@@ -9,4 +9,7 @@ Route::apiResource(
     'shopping-lists.items',
     ShoppingListItemController::class)
     ->except(['show'])
-    ->scoped();
+    ->scoped([
+        'shopping_list' => 'id',
+        'item' => 'id',
+    ]);
