@@ -20,6 +20,7 @@ class ShoppingListController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'budget_limit_in_pence' => ['nullable', 'integer', 'min:0']
         ]);
 
         $shoppingList = ShoppingList::create($validated);
@@ -38,7 +39,8 @@ class ShoppingListController extends Controller
     {
         // Todo: move this to it's own Form Request class
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'budget_limit_in_pence' => ['sometimes', 'nullable', 'integer', 'min:0']
         ]);
 
         $shoppingList->update($validated);
