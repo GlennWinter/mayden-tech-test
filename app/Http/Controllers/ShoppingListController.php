@@ -31,7 +31,8 @@ class ShoppingListController extends Controller
         return response()->json($shoppingList);
     }
 
-    public function update(UpdateShoppingListRequest $request, ShoppingList $shoppingList): JsonResponse {
+    public function update(UpdateShoppingListRequest $request, ShoppingList $shoppingList): JsonResponse
+    {
         $shoppingList->update($request->validated());
 
         return response()->json($shoppingList);

@@ -10,12 +10,13 @@ use Illuminate\Http\JsonResponse;
 
 class ShoppingListItemController extends Controller
 {
-    public function index(ShoppingList $shoppingList)
+    public function index(ShoppingList $shoppingList): JsonResponse
     {
         return $shoppingList->items;
     }
 
-    public function store(StoreShoppingListItemRequest $request, ShoppingList $shoppingList): JsonResponse {
+    public function store(StoreShoppingListItemRequest $request, ShoppingList $shoppingList): JsonResponse
+    {
         $item = $shoppingList->items()->create(
             $request->validated(),
         );
