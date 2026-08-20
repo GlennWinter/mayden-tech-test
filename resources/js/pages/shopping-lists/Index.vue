@@ -29,6 +29,15 @@ const isCreating = ref(false);
 const error = ref('');
 const successMessage = ref('');
 
+const showAccessibilitySettings = ref(false);
+
+const highContrast = ref(false);
+const largeText = ref(false);
+const reducedMotion = ref(false);
+const increasedSpacing = ref(false);
+
+const settingsCloseButton = ref<HTMLButtonElement | null>(null);
+
 // Get all shopping lists
 async function fetchShoppingLists() {
     error.value = '';
@@ -151,6 +160,24 @@ async function openCreateForm() {
     listNameInput.value?.focus();
 }
 
+async function openAccessibilitySettings() {
+    showAccessibilitySettings.value = true;
+
+    await nextTick();
+
+    settingsCloseButton.value?.focus();
+}
+
+function closeAccessibilitySettings() {
+    showAccessibilitySettings.value = false;
+}
+
+function handleSettingsKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+        closeAccessibilitySettings();
+    }
+}
+
 // Returns money in correct format
 function formatMoney(value: number | null | undefined) {
     if (value === null || value === undefined) {
@@ -164,7 +191,15 @@ onMounted(fetchShoppingLists);
 </script>
 
 <template>
-    <main class="page">
+    <main
+        class="page"
+        :class="{
+        'high-contrast': highContrast,
+        'large-text': largeText,
+        'reduced-motion': reducedMotion,
+        'increased-spacing': increasedSpacing,
+    }"
+    >
         <div class="container">
             <header class="header">
                 <div>
@@ -182,7 +217,10 @@ onMounted(fetchShoppingLists);
                         type="button"
                         class="icon-button"
                         aria-label="Open accessibility settings"
+                        aria-haspopup="dialog"
+                        :aria-expanded="showAccessibilitySettings"
                         title="Accessibility settings"
+                        @click="openAccessibilitySettings"
                     >
                         <Settings
                             :size="20"
@@ -406,6 +444,121 @@ onMounted(fetchShoppingLists);
                     >
                         Create shopping list
                     </button>
+                </div>
+            </section>
+        </div>
+        <div
+            v-if="showAccessibilitySettings"
+            class="settings-overlay"
+            @click.self="closeAccessibilitySettings"
+            @keydown="handleSettingsKeydown"
+        >
+            <section
+                class="settings-panel"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="accessibility-settings-heading"
+                aria-describedby="accessibility-settings-description"
+            >
+                <header class="settings-header">
+                    <div>
+                        <p class="settings-eyebrow">
+                            Display preferences
+                        </p>
+
+                        <h2 id="accessibility-settings-heading">
+                            Accessibility settings
+                        </h2>
+
+                        <p id="accessibility-settings-description">
+                            Adjust how the shopping list interface is displayed.
+                        </p>
+                    </div>
+
+                    <button
+                        ref="settingsCloseButton"
+                        type="button"
+                        class="settings-close"
+                        aria-label="Close accessibility settings"
+                        @click="closeAccessibilitySettings"
+                    >
+                        ×
+                    </button>
+                </header>
+
+                <div class="settings-options">
+                    <label class="setting-option">
+                <span class="setting-description">
+                    <strong>High contrast</strong>
+
+                    <small>
+                        Increase contrast between text, controls and backgrounds.
+                    </small>
+                </span>
+
+                        <input
+                            v-model="highContrast"
+                            type="checkbox"
+                        />
+                    </label>
+
+                    <label class="setting-option">
+                <span class="setting-description">
+                    <strong>Larger text</strong>
+
+                    <small>
+                        Increase text size throughout the shopping list.
+                    </small>
+                </span>
+
+                        <input
+                            v-model="largeText"
+                            type="checkbox"
+                        />
+                    </label>
+
+                    <label class="setting-option">
+                <span class="setting-description">
+                    <strong>Reduced motion</strong>
+
+                    <small>
+                        Remove non-essential movement and transitions.
+                    </small>
+                </span>
+
+                        <input
+                            v-model="reducedMotion"
+                            type="checkbox"
+                        />
+                    </label>
+
+                    <label class="setting-option">
+                <span class="setting-description">
+                    <strong>Increased spacing</strong>
+
+                    <small>
+                        Add more space between text and interface elements.
+                    </small>
+                </span>
+
+                        <input
+                            v-model="increasedSpacing"
+                            type="checkbox"
+                        />
+                    </label>
+                </div>
+
+                <div class="accessibility-notes">
+                    <h3>Built-in accessibility</h3>
+
+                    <ul>
+                        <li>Semantic HTML structure</li>
+                        <li>Keyboard accessible controls</li>
+                        <li>Associated form labels</li>
+                        <li>Visible keyboard focus</li>
+                        <li>Screen-reader announcements</li>
+                        <li>WCAG 2.2 AA considered</li>
+                    </ul>
                 </div>
             </section>
         </div>
@@ -754,6 +907,227 @@ input:focus-visible {
     border-color: #2563eb;
 }
 
+.settings-overlay {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 24px;
+    background: rgb(15 23 42 / 35%);
+}
+
+.settings-panel {
+    width: min(430px, 100%);
+    max-height: calc(100vh - 48px);
+    padding: 24px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #e2e7ee;
+    border-radius: 16px;
+    color: #172033;
+    box-shadow: 0 20px 50px rgb(15 23 42 / 18%);
+}
+
+.settings-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e8ecf1;
+}
+
+.settings-eyebrow {
+    margin: 0 0 5px;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.settings-header h2 {
+    margin: 0;
+    font-size: 23px;
+}
+
+.settings-header p:not(.settings-eyebrow) {
+    margin: 8px 0 0;
+    color: #667085;
+    line-height: 1.5;
+}
+
+.settings-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid #d8dee8;
+    border-radius: 9px;
+    background: #fff;
+    color: #475467;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.settings-close:hover {
+    background: #f8fafc;
+    color: #172033;
+}
+
+.settings-options {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.setting-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 4px;
+    border-bottom: 1px solid #eef1f5;
+    cursor: pointer;
+}
+
+.setting-description {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.setting-description strong {
+    color: #263247;
+    font-size: 15px;
+}
+
+.setting-description small {
+    max-width: 310px;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.setting-option input {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    accent-color: #2563eb;
+}
+
+.accessibility-notes {
+    margin-top: 22px;
+    padding: 18px;
+    background: #f8fafc;
+    border: 1px solid #e5eaf0;
+    border-radius: 12px;
+}
+
+.accessibility-notes h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+}
+
+.accessibility-notes ul {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding-left: 20px;
+    color: #475467;
+    font-size: 13px;
+}
+
+ /* Accessibility modes */
+.large-text {
+    font-size: 125%;
+}
+
+.large-text p,
+.large-text span,
+.large-text label,
+.large-text input,
+.large-text button,
+.large-text a {
+    font-size: 1.15em;
+}
+.large-text h1 {
+    font-size: 3rem;
+}
+
+.large-text h2 {
+    font-size: 1.75rem;
+}
+
+.large-text h3 {
+    font-size: 1.5rem;
+}
+
+.high-contrast {
+    background: #fff;
+    color: #000;
+}
+
+.high-contrast .header h1,
+.high-contrast .list-card h3,
+.high-contrast .list-details strong,
+.high-contrast .setting-description strong {
+    color: #000;
+}
+
+.high-contrast .subtitle,
+.high-contrast .list-details span,
+.high-contrast .setting-description small {
+    color: #1f2937;
+}
+
+.high-contrast .list-card,
+.high-contrast .create-card,
+.high-contrast .settings-panel {
+    border: 2px solid #000;
+}
+
+.high-contrast .primary-button {
+    background: #0037a6;
+    border-color: #0037a6;
+}
+
+.increased-spacing {
+    line-height: 1.7;
+}
+
+.increased-spacing .list-card {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.increased-spacing .lists {
+    gap: 20px;
+}
+
+.increased-spacing .list-details {
+    gap: 34px;
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.reduced-motion .primary-button:hover,
+.reduced-motion .list-card:hover {
+    transform: none;
+}
+
 /*
  * Content intended for screen readers but not visually displayed.
  */
@@ -822,6 +1196,19 @@ input:focus-visible {
 
     .create-row {
         flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .settings-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .settings-panel {
+        width: 100%;
+        max-height: 90vh;
+        border-radius: 18px 18px 0 0;
     }
 }
 </style>
