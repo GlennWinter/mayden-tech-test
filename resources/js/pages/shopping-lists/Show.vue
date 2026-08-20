@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { Check, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { useAccessibility } from '@/composables/useAccessibility';
+import AccessibilitySettings from '@/components/AccessibilitySettings.vue';
 
 import ShoppingListLayout from '@/layouts/ShoppingListLayout.vue';
 
@@ -265,6 +266,7 @@ onMounted(fetchShoppingList);
                         spending.
                     </p>
                 </div>
+                <AccessibilitySettings />
             </header>
 
             <p
@@ -566,7 +568,16 @@ onMounted(fetchShoppingList);
 }
 
 .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
     margin-bottom: 30px;
+}
+
+.header-content {
+    min-width: 0;
+    flex: 1;
 }
 
 .back-link {

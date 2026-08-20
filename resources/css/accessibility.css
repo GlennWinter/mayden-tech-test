@@ -124,6 +124,57 @@
     border: 0;
 }
 
+/* Show page - larger text */
+.page.large-text .header h1 {
+    font-size: 3.25rem !important;
+}
+
+.page.large-text .subtitle {
+    font-size: 1.3rem !important;
+}
+
+.page.large-text .summary-item span {
+    font-size: 1rem !important;
+}
+
+.page.large-text .summary-item strong {
+    font-size: 1.6rem !important;
+}
+
+.page.large-text .section-heading h2,
+.page.large-text .items-heading h2 {
+    font-size: 1.7rem !important;
+}
+
+.page.large-text .section-heading p,
+.page.large-text .items-heading p {
+    font-size: 1.2rem !important;
+}
+
+.page.large-text .form-field label {
+    font-size: 1.05rem !important;
+}
+
+.page.large-text .form-field input {
+    font-size: 1.15rem !important;
+}
+
+.page.large-text .primary-button {
+    font-size: 1.15rem !important;
+}
+
+.page.large-text .item-content h3 {
+    font-size: 1.5rem !important;
+}
+
+.page.large-text .item-meta {
+    font-size: 1.15rem !important;
+}
+
+.page.large-text .back-link {
+    font-size: 1.1rem !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

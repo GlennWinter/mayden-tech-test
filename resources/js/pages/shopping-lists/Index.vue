@@ -4,6 +4,7 @@ import { Settings, Trash2 } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
 import ShoppingListLayout from '@/layouts/ShoppingListLayout.vue';
 import { useAccessibility } from '@/composables/useAccessibility';
+import AccessibilitySettings from '@/components/AccessibilitySettings.vue';
 
 defineOptions({
     layout: ShoppingListLayout,
@@ -31,16 +32,12 @@ const isCreating = ref(false);
 const error = ref('');
 const successMessage = ref('');
 
-const showAccessibilitySettings = ref(false);
-
 const {
     highContrast,
     largeText,
     reducedMotion,
     increasedSpacing,
 } = useAccessibility();
-
-const settingsCloseButton = ref<HTMLButtonElement | null>(null);
 
 // Get all shopping lists
 async function fetchShoppingLists() {
@@ -170,24 +167,6 @@ async function openCreateForm() {
     listNameInput.value?.focus();
 }
 
-async function openAccessibilitySettings() {
-    showAccessibilitySettings.value = true;
-
-    await nextTick();
-
-    settingsCloseButton.value?.focus();
-}
-
-function closeAccessibilitySettings() {
-    showAccessibilitySettings.value = false;
-}
-
-function handleSettingsKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-        closeAccessibilitySettings();
-    }
-}
-
 // Returns money in correct format
 function formatMoney(value: number | null | undefined) {
     if (value === null || value === undefined) {
@@ -223,20 +202,7 @@ onMounted(fetchShoppingLists);
                 </div>
 
                 <div class="header-actions">
-                    <button
-                        type="button"
-                        class="icon-button"
-                        aria-label="Open accessibility settings"
-                        aria-haspopup="dialog"
-                        :aria-expanded="showAccessibilitySettings"
-                        title="Accessibility settings"
-                        @click="openAccessibilitySettings"
-                    >
-                        <Settings
-                            :size="20"
-                            aria-hidden="true"
-                        />
-                    </button>
+                    <AccessibilitySettings />
 
                     <button
                         type="button"
