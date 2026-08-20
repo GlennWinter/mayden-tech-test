@@ -15,5 +15,3 @@ Route::get('/shopping-lists/{shoppingList}', function (
         'shoppingListId' => $shoppingList->id,
     ]);
 })->name('shopping-lists.show');
-
-require __DIR__.'/settings.php';
