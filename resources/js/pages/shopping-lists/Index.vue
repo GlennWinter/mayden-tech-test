@@ -19,6 +19,7 @@ interface ShoppingList {
 const shoppingLists = ref<ShoppingList[]>([]);
 
 const newListName = ref('');
+const newListBudget = ref<number | null>(null);
 const listNameInput = ref<HTMLInputElement | null>(null);
 
 const showCreateForm = ref(false);
@@ -119,7 +120,12 @@ async function createShoppingList() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name,
+                name: newListName.value.trim(),
+
+                budget_limit_in_pence:
+                    newListBudget.value !== null
+                        ? Math.round(newListBudget.value * 100)
+                        : null,
             }),
         });
 
@@ -134,6 +140,7 @@ async function createShoppingList() {
         successMessage.value = `${shoppingList.name} created successfully.`;
 
         newListName.value = '';
+        newListBudget.value = null;
         showCreateForm.value = false;
     } catch {
         error.value = 'Unable to create shopping list.';
@@ -257,35 +264,44 @@ onMounted(fetchShoppingLists);
                     Create shopping list
                 </h2>
 
-                <form @submit.prevent="createShoppingList">
-                    <label for="list-name">
-                        List name
-                    </label>
+                <form class="create-row" @submit.prevent="createShoppingList">
+                    <div class="create-field name-field">
+                        <label for="list-name">List name</label>
 
-                    <div class="create-row">
                         <input
                             id="list-name"
-                            ref="listNameInput"
                             v-model="newListName"
                             type="text"
                             maxlength="255"
                             placeholder="e.g. Weekly shop"
-                            autocomplete="off"
                             required
                         />
-
-                        <button
-                            type="submit"
-                            class="primary-button"
-                            :disabled="isCreating"
-                        >
-                            {{
-                                isCreating
-                                    ? 'Creating...'
-                                    : 'Create'
-                            }}
-                        </button>
                     </div>
+
+                    <div class="create-field budget-field">
+                        <label for="list-budget">Budget</label>
+
+                        <div class="budget-input">
+                            <span aria-hidden="true">£</span>
+
+                            <input
+                                id="list-budget"
+                                v-model.number="newListBudget"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="50.00"
+                            />
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="primary-button create-submit"
+                        :disabled="isCreating"
+                    >
+                        {{ isCreating ? 'Creating...' : 'Create' }}
+                    </button>
                 </form>
             </section>
 
@@ -708,12 +724,26 @@ onMounted(fetchShoppingLists);
 }
 
 .create-row {
-    display: flex;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px auto;
+    align-items: end;
+    gap: 12px;
 }
 
-.create-row input {
-    flex: 1;
+.create-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.create-field label {
+    color: #344054;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.create-field input {
+    width: 100%;
     min-height: 46px;
     padding: 0 13px;
     border: 1px solid #cfd6df;
@@ -723,8 +753,29 @@ onMounted(fetchShoppingLists);
     font: inherit;
 }
 
-.create-row input::placeholder {
+.create-field input::placeholder {
     color: #667085;
+}
+
+.budget-input {
+    position: relative;
+}
+
+.budget-input span {
+    position: absolute;
+    top: 50%;
+    left: 13px;
+    color: #667085;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.budget-input input {
+    padding-left: 30px;
+}
+
+.create-submit {
+    min-height: 46px;
 }
 
 .lists {
