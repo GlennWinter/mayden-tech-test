@@ -89,4 +89,39 @@ class ShoppingListModelTest extends TestCase
 
         $this->assertFalse($shoppingList->is_over_budget);
     }
+
+    public function test_empty_shopping_list_has_zero_total(): void
+    {
+        $shoppingList = ShoppingList::factory()->create();
+
+        $this->assertSame(0, $shoppingList->total_in_pence);
+    }
+
+    public function test_total_accounts_for_item_quantities(): void
+    {
+        $shoppingList = ShoppingList::factory()->create();
+
+        ShoppingListItem::factory()->create([
+            'shopping_list_id' => $shoppingList->id,
+            'price_in_pence' => 250,
+            'quantity' => 4,
+        ]);
+
+        $this->assertSame(1000, $shoppingList->total_in_pence);
+    }
+
+    public function test_total_equal_to_budget_is_not_over_budget(): void
+    {
+        $shoppingList = ShoppingList::factory()->create([
+            'budget_limit_in_pence' => 1000,
+        ]);
+
+        ShoppingListItem::factory()->create([
+            'shopping_list_id' => $shoppingList->id,
+            'price_in_pence' => 500,
+            'quantity' => 2,
+        ]);
+
+        $this->assertFalse($shoppingList->is_over_budget);
+    }
 }

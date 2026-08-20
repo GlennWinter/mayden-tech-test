@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreShoppingListItemRequest;
+use App\Http\Requests\UpdateShoppingListItemRequest;
 use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ShoppingListItemController extends Controller
 {
@@ -14,35 +15,25 @@ class ShoppingListItemController extends Controller
         return $shoppingList->items;
     }
 
-    public function store(Request $request, ShoppingList $shoppingList): JsonResponse
-    {
-        // todo: move to own form request class
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'price_in_pence' => ['required', 'integer', 'min:0'],
-        ]);
-
-        $item = $shoppingList->items()->create($validated);
+    public function store(StoreShoppingListItemRequest $request, ShoppingList $shoppingList): JsonResponse {
+        $item = $shoppingList->items()->create(
+            $request->validated(),
+        );
 
         return response()->json($item, 201);
     }
 
-    public function update(Request $request, ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
-    {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'quantity' => ['sometimes', 'required', 'integer', 'min:1'],
-            'price_in_pence' => ['sometimes', 'integer', 'min:0'],
-            'is_purchased' => ['sometimes', 'boolean'],
-        ]);
-
-        $item->update($validated);
+    public function update(
+        UpdateShoppingListItemRequest $request,
+        ShoppingList $shoppingList,
+        ShoppingListItem $item
+    ): JsonResponse {
+        $item->update($request->validated());
 
         return response()->json($item);
     }
 
-    // todo: add show function for individual item
+    // todo: add show function for individual item to show picture and details
 
     public function destroy(ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
     {

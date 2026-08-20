@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreShoppingListRequest;
+use App\Http\Requests\UpdateShoppingListRequest;
 use App\Models\ShoppingList;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ShoppingListController extends Controller
 {
@@ -16,14 +17,9 @@ class ShoppingListController extends Controller
         return response()->json($shoppingLists);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreShoppingListRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'budget_limit_in_pence' => ['nullable', 'integer', 'min:0']
-        ]);
-
-        $shoppingList = ShoppingList::create($validated);
+        $shoppingList = ShoppingList::create($request->validated());
 
         return response()->json($shoppingList, 201);
     }
@@ -35,15 +31,8 @@ class ShoppingListController extends Controller
         return response()->json($shoppingList);
     }
 
-    public function update(Request $request, ShoppingList $shoppingList): JsonResponse
-    {
-        // Todo: move this to it's own Form Request class
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'budget_limit_in_pence' => ['sometimes', 'nullable', 'integer', 'min:0']
-        ]);
-
-        $shoppingList->update($validated);
+    public function update(UpdateShoppingListRequest $request, ShoppingList $shoppingList): JsonResponse {
+        $shoppingList->update($request->validated());
 
         return response()->json($shoppingList);
     }
