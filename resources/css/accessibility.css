@@ -175,6 +175,32 @@
     font-size: 1.1rem !important;
 }
 
+/* High contrast - budget warning */
+.page.high-contrast .budget-warning {
+    background: #fff !important;
+    border: 2px solid #000 !important;
+    color: #000 !important;
+}
+
+.page.high-contrast .budget-warning strong {
+    color: #000 !important;
+}
+
+/* High contrast - budget warning */
+.page.high-contrast .budget-warning {
+    padding: 18px 20px;
+    background: #fff0f0 !important;
+    border: 3px solid #b91c1c !important;
+    border-left-width: 8px !important;
+    color: #7f1d1d !important;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.page.high-contrast .budget-warning strong {
+    color: #7f1d1d !important;
+    font-weight: 800;
+}
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
