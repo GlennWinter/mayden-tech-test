@@ -1,0 +1,136 @@
+/* Larger text */
+
+.page.large-text h1 {
+    font-size: 3rem;
+}
+
+.page.large-text h2 {
+    font-size: 1.75rem;
+}
+
+.page.large-text h3 {
+    font-size: 1.5rem;
+}
+
+.page.large-text p,
+.page.large-text label,
+.page.large-text input,
+.page.large-text button,
+.page.large-text a {
+    font-size: 1.15rem;
+}
+
+.page.large-text .list-details span {
+    font-size: 1.05rem;
+}
+
+.page.large-text .list-details strong {
+    font-size: 1.35rem;
+}
+
+.page.large-text .list-card h3 {
+    font-size: 1.75rem;
+    line-height: 1.3;
+}
+
+.page.large-text .item-meta {
+    font-size: 1.1rem;
+}
+
+/* High contrast */
+.page.high-contrast {
+    background: #fff;
+    color: #000;
+}
+
+.page.high-contrast h1,
+.page.high-contrast h2,
+.page.high-contrast h3,
+.page.high-contrast strong {
+    color: #000;
+}
+
+.page.high-contrast .subtitle,
+.page.high-contrast .list-details span,
+.page.high-contrast .item-meta,
+.page.high-contrast .summary-item span {
+    color: #111827;
+}
+
+/* Index page */
+.page.high-contrast .list-card,
+.page.high-contrast .create-card {
+    border: 2px solid #000 !important;
+}
+
+/* Show page */
+.page.high-contrast .item-card,
+.page.high-contrast .add-item-card,
+.page.high-contrast .items-section,
+.page.high-contrast .summary {
+    border: 2px solid #000 !important;
+}
+
+/* Inputs and controls */
+.page.high-contrast input {
+    border: 2px solid #000 !important;
+    color: #000;
+}
+
+.page.high-contrast .view-button,
+.page.high-contrast .delete-button,
+.page.high-contrast .purchase-button {
+    border-color: #000 !important;
+}
+
+.page.high-contrast .primary-button {
+    background: #0037a6;
+    border-color: #000;
+    color: #fff;
+}
+
+.increased-spacing {
+    line-height: 1.7;
+}
+
+.increased-spacing .list-card,
+.increased-spacing .item-card {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.increased-spacing .lists,
+.increased-spacing .items {
+    gap: 20px;
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

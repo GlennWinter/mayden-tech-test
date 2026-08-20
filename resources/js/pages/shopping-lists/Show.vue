@@ -2,12 +2,19 @@
 import { Link } from '@inertiajs/vue3';
 import { Check, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
+import { useAccessibility } from '@/composables/useAccessibility';
 
 import ShoppingListLayout from '@/layouts/ShoppingListLayout.vue';
 
 defineOptions({
     layout: ShoppingListLayout,
 });
+const {
+    highContrast,
+    largeText,
+    reducedMotion,
+    increasedSpacing,
+} = useAccessibility();
 
 interface ShoppingListItem {
     id: number;
@@ -230,7 +237,15 @@ onMounted(fetchShoppingList);
 </script>
 
 <template>
-    <main class="page">
+    <main
+        class="page"
+        :class="{
+        'high-contrast': highContrast,
+        'large-text': largeText,
+        'reduced-motion': reducedMotion,
+        'increased-spacing': increasedSpacing,
+    }"
+    >
         <div class="container">
             <header class="header">
                 <div>
@@ -693,6 +708,7 @@ onMounted(fetchShoppingList);
     left: 12px;
     color: #667085;
     transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .price-input input {
@@ -713,10 +729,16 @@ onMounted(fetchShoppingList);
     font: inherit;
     font-weight: 650;
     cursor: pointer;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
 }
 
 .primary-button:hover:not(:disabled) {
     background: #1d4ed8;
+    border-color: #1d4ed8;
+    transform: translateY(-1px);
 }
 
 .primary-button:disabled {
@@ -733,15 +755,21 @@ onMounted(fetchShoppingList);
 .item-card {
     display: flex;
     align-items: center;
-    gap: 14px;
-    min-height: 72px;
-    padding: 14px 16px;
+    gap: 16px;
+    min-height: 82px;
+    padding: 18px;
     border: 1px solid #e2e7ee;
     border-radius: 11px;
     background: #fff;
     transition:
         background 0.15s ease,
+        border-color 0.15s ease,
         opacity 0.15s ease;
+}
+
+.item-card:hover {
+    border-color: #d3dae5;
+    background: #fbfcfd;
 }
 
 .item-card.purchased {
@@ -763,14 +791,17 @@ onMounted(fetchShoppingList);
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     border: 2px solid #cbd5e1;
     border-radius: 7px;
     background: #fff;
     color: #fff;
     cursor: pointer;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
 }
 
 .purchase-button:hover {
@@ -789,15 +820,20 @@ onMounted(fetchShoppingList);
 
 .item-content h3 {
     margin: 0 0 6px;
-    font-size: 16px;
+    color: #172033;
+    font-size: 18px;
+    font-weight: 650;
+    line-height: 1.4;
 }
 
 .item-meta {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 12px;
     color: #667085;
-    font-size: 13px;
+    font-size: 15px;
+    line-height: 1.5;
 }
 
 .delete-button {
@@ -805,19 +841,24 @@ onMounted(fetchShoppingList);
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 1px solid #fecaca;
     border-radius: 9px;
     background: #fff;
     color: #dc2626;
     cursor: pointer;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
 }
 
 .delete-button:hover {
     background: #fef2f2;
     border-color: #fca5a5;
+    color: #b91c1c;
 }
 
 .empty-state {
@@ -846,6 +887,9 @@ onMounted(fetchShoppingList);
     font-weight: 600;
 }
 
+/*
+ * Visible keyboard focus.
+ */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible {
@@ -853,6 +897,9 @@ input:focus-visible {
     outline-offset: 3px;
 }
 
+/*
+ * Content intended for screen readers but not visually displayed.
+ */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -865,12 +912,19 @@ input:focus-visible {
     border: 0;
 }
 
+/*
+ * Respect the user's operating-system motion preference.
+ */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
         transition: none !important;
         animation: none !important;
+    }
+
+    .primary-button:hover {
+        transform: none;
     }
 }
 
@@ -894,6 +948,11 @@ input:focus-visible {
 
     .primary-button {
         width: 100%;
+    }
+
+    .item-card {
+        gap: 12px;
+        padding: 16px;
     }
 }
 </style>

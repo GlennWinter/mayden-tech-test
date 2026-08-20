@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { Settings, Trash2 } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
 import ShoppingListLayout from '@/layouts/ShoppingListLayout.vue';
+import { useAccessibility } from '@/composables/useAccessibility';
 
 defineOptions({
     layout: ShoppingListLayout,
@@ -32,10 +33,12 @@ const successMessage = ref('');
 
 const showAccessibilitySettings = ref(false);
 
-const highContrast = ref(false);
-const largeText = ref(false);
-const reducedMotion = ref(false);
-const increasedSpacing = ref(false);
+const {
+    highContrast,
+    largeText,
+    reducedMotion,
+    increasedSpacing,
+} = useAccessibility();
 
 const settingsCloseButton = ref<HTMLButtonElement | null>(null);
 
@@ -1093,105 +1096,6 @@ input:focus-visible {
     padding-left: 20px;
     color: #475467;
     font-size: 13px;
-}
-
- /* Accessibility modes */
-.large-text {
-    font-size: 125%;
-}
-
-.large-text p,
-.large-text span,
-.large-text label,
-.large-text input,
-.large-text button,
-.large-text a {
-    font-size: 1.15em;
-}
-.large-text h1 {
-    font-size: 3rem;
-}
-
-.large-text h2 {
-    font-size: 1.75rem;
-}
-
-.large-text h3 {
-    font-size: 1.5rem;
-}
-
-.high-contrast {
-    background: #fff;
-    color: #000;
-}
-
-.high-contrast .header h1,
-.high-contrast .list-card h3,
-.high-contrast .list-details strong,
-.high-contrast .setting-description strong {
-    color: #000;
-}
-
-.high-contrast .subtitle,
-.high-contrast .list-details span,
-.high-contrast .setting-description small {
-    color: #1f2937;
-}
-
-.high-contrast .list-card,
-.high-contrast .create-card,
-.high-contrast .settings-panel {
-    border: 2px solid #000;
-}
-
-.high-contrast .primary-button {
-    background: #0037a6;
-    border-color: #0037a6;
-}
-
-.increased-spacing {
-    line-height: 1.7;
-}
-
-.increased-spacing .list-card {
-    padding-top: 30px;
-    padding-bottom: 30px;
-}
-
-.increased-spacing .lists {
-    gap: 20px;
-}
-
-.increased-spacing .list-details {
-    gap: 34px;
-}
-
-.reduced-motion *,
-.reduced-motion *::before,
-.reduced-motion *::after {
-    scroll-behavior: auto !important;
-    transition: none !important;
-    animation: none !important;
-}
-
-.reduced-motion .primary-button:hover,
-.reduced-motion .list-card:hover {
-    transform: none;
-}
-
-/*
- * Content intended for screen readers but not visually displayed.
- */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
 }
 
 /*
