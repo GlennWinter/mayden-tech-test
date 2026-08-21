@@ -7,9 +7,11 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Symfony\Component\HttpFoundation\Response;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,9 +30,22 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        // Cap the amount of requests to 60 per minute
+        // Cap the amount of requests to 60 per minute.
         RateLimiter::for('shopping-list-api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->ip());
+            return Limit::perMinute(60)
+                ->by($request->ip())
+                ->response(function (Request $request, array $headers) {
+                    // Log the IP.
+                    Log::warning('Shopping list API rate limit exceeded.', [
+                        'ip' => $request->ip(),
+                    ]);
+
+                    return response()->json(
+                        ['message' => 'Too many requests. Please try again later.'],
+                        Response::HTTP_TOO_MANY_REQUESTS,
+                        $headers,
+                    );
+                });
         });
     }
 
