@@ -6,7 +6,6 @@ use App\Http\Requests\StoreShoppingListItemRequest;
 use App\Http\Requests\UpdateShoppingListItemRequest;
 use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 class ShoppingListItemController extends Controller
@@ -14,9 +13,11 @@ class ShoppingListItemController extends Controller
     /**
      * List all items belonging to the given shopping list.
      */
-    public function index(ShoppingList $shoppingList): Collection
+    public function index(ShoppingList $shoppingList): JsonResponse
     {
-        return $shoppingList->items()->get();
+        return response()->json(
+            $shoppingList->items()->get()
+        );
     }
 
     /**
@@ -30,6 +31,7 @@ class ShoppingListItemController extends Controller
 
         return response()->json($item, 201);
     }
+
     /**
      * Update an existing item. Route-model binding is scoped to the parent
      * shopping list (see routes/api.php), so an item ID that belongs to a
