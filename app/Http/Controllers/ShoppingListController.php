@@ -9,6 +9,9 @@ use Illuminate\Http\JsonResponse;
 
 class ShoppingListController extends Controller
 {
+    /**
+     * Gets all shopping lists for index page.
+     */
     public function index(): JsonResponse
     {
         // Only get shopping lists with items
@@ -17,6 +20,9 @@ class ShoppingListController extends Controller
         return response()->json($shoppingLists);
     }
 
+    /**
+     * Creates a shopping list.
+     */
     public function store(StoreShoppingListRequest $request): JsonResponse
     {
         $shoppingList = ShoppingList::create($request->validated());
@@ -24,6 +30,9 @@ class ShoppingListController extends Controller
         return response()->json($shoppingList, 201);
     }
 
+    /**
+     * Gets individual shopping list and items
+     */
     public function show(ShoppingList $shoppingList): JsonResponse
     {
         $shoppingList->load('items');

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Settings, Trash2 } from 'lucide-vue-next';
+import { Trash2 } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
-import ShoppingListLayout from '@/layouts/ShoppingListLayout.vue';
-import { useAccessibility } from '@/composables/useAccessibility';
 import AccessibilitySettings from '@/components/AccessibilitySettings.vue';
+import { useAccessibility } from '@/composables/useAccessibility';
+import ShoppingListLayout from '@/layouts/ShoppingListLayout.vue';
 
 defineOptions({
     layout: ShoppingListLayout,
@@ -32,12 +32,20 @@ const isCreating = ref(false);
 const error = ref('');
 const successMessage = ref('');
 
-const {
-    highContrast,
-    largeText,
-    reducedMotion,
-    increasedSpacing,
-} = useAccessibility();
+const { highContrast, largeText, reducedMotion, increasedSpacing } =
+    useAccessibility();
+
+const showAccessibilitySettings = ref(false);
+
+function closeAccessibilitySettings() {
+    showAccessibilitySettings.value = false;
+}
+
+function handleSettingsKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+        closeAccessibilitySettings();
+    }
+}
 
 // Get all shopping lists
 async function fetchShoppingLists() {
@@ -76,15 +84,12 @@ async function deleteShoppingList(shoppingList: ShoppingList) {
     successMessage.value = '';
 
     try {
-        const response = await fetch(
-            `/api/shopping-lists/${shoppingList.id}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    Accept: 'application/json',
-                },
+        const response = await fetch(`/api/shopping-lists/${shoppingList.id}`, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
             },
-        );
+        });
 
         if (!response.ok) {
             throw new Error('Unable to delete shopping list.');
@@ -183,11 +188,11 @@ onMounted(fetchShoppingLists);
     <main
         class="page"
         :class="{
-        'high-contrast': highContrast,
-        'large-text': largeText,
-        'reduced-motion': reducedMotion,
-        'increased-spacing': increasedSpacing,
-    }"
+            'high-contrast': highContrast,
+            'large-text': largeText,
+            'reduced-motion': reducedMotion,
+            'increased-spacing': increasedSpacing,
+        }"
     >
         <div class="container">
             <header class="header">
@@ -211,12 +216,7 @@ onMounted(fetchShoppingLists);
                         :aria-expanded="showCreateForm"
                         @click="toggleCreateForm"
                     >
-                        <span
-                            class="plus"
-                            aria-hidden="true"
-                        >
-                            +
-                        </span>
+                        <span class="plus" aria-hidden="true"> + </span>
 
                         Create new list
                     </button>
@@ -229,9 +229,7 @@ onMounted(fetchShoppingLists);
                 class="create-card"
                 aria-labelledby="create-list-heading"
             >
-                <h2 id="create-list-heading">
-                    Create shopping list
-                </h2>
+                <h2 id="create-list-heading">Create shopping list</h2>
 
                 <form class="create-row" @submit.prevent="createShoppingList">
                     <div class="create-field name-field">
@@ -274,11 +272,7 @@ onMounted(fetchShoppingLists);
                 </form>
             </section>
 
-            <p
-                v-if="error"
-                class="error"
-                role="alert"
-            >
+            <p v-if="error" class="error" role="alert">
                 {{ error }}
             </p>
 
@@ -305,10 +299,7 @@ onMounted(fetchShoppingLists);
                 class="lists"
                 aria-labelledby="shopping-lists-heading"
             >
-                <h2
-                    id="shopping-lists-heading"
-                    class="sr-only"
-                >
+                <h2 id="shopping-lists-heading" class="sr-only">
                     Your shopping lists
                 </h2>
 
@@ -326,13 +317,9 @@ onMounted(fetchShoppingLists);
                             <span
                                 v-if="shoppingList.is_over_budget"
                                 class="over-budget"
-                                :aria-label="
-                                    `${shoppingList.name} is over budget`
-                                "
+                                :aria-label="`${shoppingList.name} is over budget`"
                             >
-                                <span aria-hidden="true">
-                                    ⚠
-                                </span>
+                                <span aria-hidden="true"> ⚠ </span>
 
                                 Over budget
                             </span>
@@ -344,9 +331,7 @@ onMounted(fetchShoppingLists);
 
                                 <strong>
                                     {{
-                                        formatMoney(
-                                            shoppingList.total_in_pence,
-                                        )
+                                        formatMoney(shoppingList.total_in_pence)
                                     }}
                                 </strong>
                             </span>
@@ -374,53 +359,31 @@ onMounted(fetchShoppingLists);
 
                     <div class="list-actions">
                         <Link
-                            :href="
-                                `/shopping-lists/${shoppingList.id}`
-                            "
+                            :href="`/shopping-lists/${shoppingList.id}`"
                             class="view-button"
-                            :aria-label="
-                                `View shopping list ${shoppingList.name}`
-                            "
+                            :aria-label="`View shopping list ${shoppingList.name}`"
                         >
                             View list
 
-                            <span aria-hidden="true">
-                                →
-                            </span>
+                            <span aria-hidden="true"> → </span>
                         </Link>
 
                         <button
                             type="button"
                             class="delete-button"
-                            :aria-label="
-                                `Delete shopping list ${shoppingList.name}`
-                            "
-                            :title="
-                                `Delete ${shoppingList.name}`
-                            "
-                            @click="
-                                deleteShoppingList(shoppingList)
-                            "
+                            :aria-label="`Delete shopping list ${shoppingList.name}`"
+                            :title="`Delete ${shoppingList.name}`"
+                            @click="deleteShoppingList(shoppingList)"
                         >
-                            <Trash2
-                                :size="19"
-                                aria-hidden="true"
-                            />
+                            <Trash2 :size="19" aria-hidden="true" />
                         </button>
                     </div>
                 </article>
 
-                <div
-                    v-if="shoppingLists.length === 0"
-                    class="empty-state"
-                >
-                    <h3>
-                        No shopping lists yet
-                    </h3>
+                <div v-if="shoppingLists.length === 0" class="empty-state">
+                    <h3>No shopping lists yet</h3>
 
-                    <p>
-                        Create your first shopping list to get started.
-                    </p>
+                    <p>Create your first shopping list to get started.</p>
 
                     <button
                         type="button"
@@ -447,9 +410,7 @@ onMounted(fetchShoppingLists);
             >
                 <header class="settings-header">
                     <div>
-                        <p class="settings-eyebrow">
-                            Display preferences
-                        </p>
+                        <p class="settings-eyebrow">Display preferences</p>
 
                         <h2 id="accessibility-settings-heading">
                             Accessibility settings
@@ -473,63 +434,53 @@ onMounted(fetchShoppingLists);
 
                 <div class="settings-options">
                     <label class="setting-option">
-                <span class="setting-description">
-                    <strong>High contrast</strong>
+                        <span class="setting-description">
+                            <strong>High contrast</strong>
 
-                    <small>
-                        Increase contrast between text, controls and backgrounds.
-                    </small>
-                </span>
+                            <small>
+                                Increase contrast between text, controls and
+                                backgrounds.
+                            </small>
+                        </span>
 
-                        <input
-                            v-model="highContrast"
-                            type="checkbox"
-                        />
+                        <input v-model="highContrast" type="checkbox" />
                     </label>
 
                     <label class="setting-option">
-                <span class="setting-description">
-                    <strong>Larger text</strong>
+                        <span class="setting-description">
+                            <strong>Larger text</strong>
 
-                    <small>
-                        Increase text size throughout the shopping list.
-                    </small>
-                </span>
+                            <small>
+                                Increase text size throughout the shopping list.
+                            </small>
+                        </span>
 
-                        <input
-                            v-model="largeText"
-                            type="checkbox"
-                        />
+                        <input v-model="largeText" type="checkbox" />
                     </label>
 
                     <label class="setting-option">
-                <span class="setting-description">
-                    <strong>Reduced motion</strong>
+                        <span class="setting-description">
+                            <strong>Reduced motion</strong>
 
-                    <small>
-                        Remove non-essential movement and transitions.
-                    </small>
-                </span>
+                            <small>
+                                Remove non-essential movement and transitions.
+                            </small>
+                        </span>
 
-                        <input
-                            v-model="reducedMotion"
-                            type="checkbox"
-                        />
+                        <input v-model="reducedMotion" type="checkbox" />
                     </label>
 
                     <label class="setting-option">
-                <span class="setting-description">
-                    <strong>Increased spacing</strong>
+                        <span class="setting-description">
+                            <strong>Increased spacing</strong>
 
-                    <small>
-                        Add more space between text and interface elements.
-                    </small>
-                </span>
+                            <small>
+                                Add more space between text and interface
+                                elements.
+                            </small>
+                        </span>
 
-                        <input
-                            v-model="increasedSpacing"
-                            type="checkbox"
-                        />
+                        <input v-model="increasedSpacing" type="checkbox" />
                     </label>
                 </div>
 
@@ -554,11 +505,7 @@ onMounted(fetchShoppingLists);
 .page {
     min-height: 100vh;
     padding: 56px 24px;
-    background: linear-gradient(
-        180deg,
-        #f8fafc 0%,
-        #f4f6f8 100%
-    );
+    background: linear-gradient(180deg, #f8fafc 0%, #f4f6f8 100%);
     color: #172033;
 }
 

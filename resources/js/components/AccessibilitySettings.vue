@@ -7,12 +7,8 @@ import { useAccessibility } from '@/composables/useAccessibility';
 const showSettings = ref(false);
 const closeButton = ref<HTMLButtonElement | null>(null);
 
-const {
-    highContrast,
-    largeText,
-    reducedMotion,
-    increasedSpacing,
-} = useAccessibility();
+const { highContrast, largeText, reducedMotion, increasedSpacing } =
+    useAccessibility();
 
 async function openSettings() {
     showSettings.value = true;
@@ -43,10 +39,7 @@ function handleKeydown(event: KeyboardEvent) {
         title="Accessibility settings"
         @click="openSettings"
     >
-        <Settings
-            :size="20"
-            aria-hidden="true"
-        />
+        <Settings :size="20" aria-hidden="true" />
     </button>
 
     <div
@@ -64,9 +57,7 @@ function handleKeydown(event: KeyboardEvent) {
         >
             <header class="settings-header">
                 <div>
-                    <p class="settings-eyebrow">
-                        Display preferences
-                    </p>
+                    <p class="settings-eyebrow">Display preferences</p>
 
                     <h2 id="accessibility-settings-heading">
                         Accessibility settings
@@ -93,14 +84,12 @@ function handleKeydown(event: KeyboardEvent) {
                     <span class="setting-description">
                         <strong>High contrast</strong>
                         <small>
-                            Increase contrast between text, controls and backgrounds.
+                            Increase contrast between text, controls and
+                            backgrounds.
                         </small>
                     </span>
 
-                    <input
-                        v-model="highContrast"
-                        type="checkbox"
-                    />
+                    <input v-model="highContrast" type="checkbox" />
                 </label>
 
                 <label class="setting-option">
@@ -111,10 +100,7 @@ function handleKeydown(event: KeyboardEvent) {
                         </small>
                     </span>
 
-                    <input
-                        v-model="largeText"
-                        type="checkbox"
-                    />
+                    <input v-model="largeText" type="checkbox" />
                 </label>
 
                 <label class="setting-option">
@@ -125,10 +111,7 @@ function handleKeydown(event: KeyboardEvent) {
                         </small>
                     </span>
 
-                    <input
-                        v-model="reducedMotion"
-                        type="checkbox"
-                    />
+                    <input v-model="reducedMotion" type="checkbox" />
                 </label>
 
                 <label class="setting-option">
@@ -139,10 +122,7 @@ function handleKeydown(event: KeyboardEvent) {
                         </small>
                     </span>
 
-                    <input
-                        v-model="increasedSpacing"
-                        type="checkbox"
-                    />
+                    <input v-model="increasedSpacing" type="checkbox" />
                 </label>
             </div>
 

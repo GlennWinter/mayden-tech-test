@@ -2,20 +2,16 @@
 import { Link } from '@inertiajs/vue3';
 import { Check, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
-import { useAccessibility } from '@/composables/useAccessibility';
 import AccessibilitySettings from '@/components/AccessibilitySettings.vue';
+import { useAccessibility } from '@/composables/useAccessibility';
 
 import ShoppingListLayout from '@/layouts/ShoppingListLayout.vue';
 
 defineOptions({
     layout: ShoppingListLayout,
 });
-const {
-    highContrast,
-    largeText,
-    reducedMotion,
-    increasedSpacing,
-} = useAccessibility();
+const { highContrast, largeText, reducedMotion, increasedSpacing } =
+    useAccessibility();
 
 interface ShoppingListItem {
     id: number;
@@ -105,6 +101,7 @@ async function addItem() {
 
     if (itemPrice.value === null || itemPrice.value < 0) {
         error.value = 'Please enter a valid price.';
+
         return;
     }
 
@@ -241,19 +238,16 @@ onMounted(fetchShoppingList);
     <main
         class="page"
         :class="{
-        'high-contrast': highContrast,
-        'large-text': largeText,
-        'reduced-motion': reducedMotion,
-        'increased-spacing': increasedSpacing,
-    }"
+            'high-contrast': highContrast,
+            'large-text': largeText,
+            'reduced-motion': reducedMotion,
+            'increased-spacing': increasedSpacing,
+        }"
     >
         <div class="container">
             <header class="header">
                 <div>
-                    <Link
-                        href="/"
-                        class="back-link"
-                    >
+                    <Link href="/" class="back-link">
                         ← Back to shopping lists
                     </Link>
 
@@ -269,11 +263,7 @@ onMounted(fetchShoppingList);
                 <AccessibilitySettings />
             </header>
 
-            <p
-                v-if="error"
-                class="error"
-                role="alert"
-            >
+            <p v-if="error" class="error" role="alert">
                 {{ error }}
             </p>
 
@@ -286,19 +276,12 @@ onMounted(fetchShoppingList);
                 {{ successMessage }}
             </p>
 
-            <p
-                v-if="isLoading"
-                role="status"
-                aria-live="polite"
-            >
+            <p v-if="isLoading" role="status" aria-live="polite">
                 Loading shopping list...
             </p>
 
             <template v-else-if="shoppingList">
-                <section
-                    class="summary"
-                    aria-label="Shopping list summary"
-                >
+                <section class="summary" aria-label="Shopping list summary">
                     <div class="summary-item">
                         <span>Total</span>
                         <strong>{{ formatMoney(total) }}</strong>
@@ -311,9 +294,7 @@ onMounted(fetchShoppingList);
                         <span>Budget</span>
                         <strong>
                             {{
-                                formatMoney(
-                                    shoppingList.budget_limit_in_pence,
-                                )
+                                formatMoney(shoppingList.budget_limit_in_pence)
                             }}
                         </strong>
                     </div>
@@ -324,9 +305,7 @@ onMounted(fetchShoppingList);
                     >
                         <span>Remaining</span>
 
-                        <strong
-                            :class="{ negative: isOverBudget }"
-                        >
+                        <strong :class="{ negative: isOverBudget }">
                             {{
                                 formatMoney(
                                     shoppingList.budget_limit_in_pence - total,
@@ -336,17 +315,13 @@ onMounted(fetchShoppingList);
                     </div>
                 </section>
 
-                <div
-                    v-if="isOverBudget"
-                    class="budget-warning"
-                    role="alert"
-                >
+                <div v-if="isOverBudget" class="budget-warning" role="alert">
                     You are over your budget by
                     <strong>
                         {{
                             formatMoney(
                                 total -
-                                (shoppingList.budget_limit_in_pence ?? 0),
+                                    (shoppingList.budget_limit_in_pence ?? 0),
                             )
                         }}
                     </strong>
@@ -358,27 +333,17 @@ onMounted(fetchShoppingList);
                 >
                     <div class="section-heading">
                         <div>
-                            <h2 id="add-item-heading">
-                                Add item
-                            </h2>
+                            <h2 id="add-item-heading">Add item</h2>
 
                             <p>Add something to your shopping list.</p>
                         </div>
 
-                        <Plus
-                            :size="22"
-                            aria-hidden="true"
-                        />
+                        <Plus :size="22" aria-hidden="true" />
                     </div>
 
-                    <form
-                        class="add-item-form"
-                        @submit.prevent="addItem"
-                    >
+                    <form class="add-item-form" @submit.prevent="addItem">
                         <div class="form-field item-name-field">
-                            <label for="item-name">
-                                Item name
-                            </label>
+                            <label for="item-name"> Item name </label>
 
                             <input
                                 id="item-name"
@@ -391,9 +356,7 @@ onMounted(fetchShoppingList);
                         </div>
 
                         <div class="form-field">
-                            <label for="item-price">
-                                Price
-                            </label>
+                            <label for="item-price"> Price </label>
 
                             <div class="price-input">
                                 <span aria-hidden="true">£</span>
@@ -411,9 +374,7 @@ onMounted(fetchShoppingList);
                         </div>
 
                         <div class="form-field quantity-field">
-                            <label for="item-quantity">
-                                Quantity
-                            </label>
+                            <label for="item-quantity"> Quantity </label>
 
                             <input
                                 id="item-quantity"
@@ -430,29 +391,17 @@ onMounted(fetchShoppingList);
                             class="primary-button"
                             :disabled="isAddingItem"
                         >
-                            <Plus
-                                :size="18"
-                                aria-hidden="true"
-                            />
+                            <Plus :size="18" aria-hidden="true" />
 
-                            {{
-                                isAddingItem
-                                    ? 'Adding...'
-                                    : 'Add item'
-                            }}
+                            {{ isAddingItem ? 'Adding...' : 'Add item' }}
                         </button>
                     </form>
                 </section>
 
-                <section
-                    class="items-section"
-                    aria-labelledby="items-heading"
-                >
+                <section class="items-section" aria-labelledby="items-heading">
                     <div class="items-heading">
                         <div>
-                            <h2 id="items-heading">
-                                Items
-                            </h2>
+                            <h2 id="items-heading">Items</h2>
 
                             <p>
                                 {{ shoppingList.items.length }}
@@ -471,15 +420,10 @@ onMounted(fetchShoppingList);
                     >
                         <h3>Your shopping list is empty</h3>
 
-                        <p>
-                            Add your first item using the form above.
-                        </p>
+                        <p>Add your first item using the form above.</p>
                     </div>
 
-                    <div
-                        v-else
-                        class="items"
-                    >
+                    <div v-else class="items">
                         <article
                             v-for="item in shoppingList.items"
                             :key="item.id"
@@ -521,7 +465,7 @@ onMounted(fetchShoppingList);
                                         {{
                                             formatMoney(
                                                 item.price_in_pence *
-                                                item.quantity,
+                                                    item.quantity,
                                             )
                                         }}
                                         total
@@ -536,10 +480,7 @@ onMounted(fetchShoppingList);
                                 :title="`Remove ${item.name}`"
                                 @click="deleteItem(item)"
                             >
-                                <Trash2
-                                    :size="19"
-                                    aria-hidden="true"
-                                />
+                                <Trash2 :size="19" aria-hidden="true" />
                             </button>
                         </article>
                     </div>
@@ -553,11 +494,7 @@ onMounted(fetchShoppingList);
 .page {
     min-height: 100vh;
     padding: 56px 24px;
-    background: linear-gradient(
-        180deg,
-        #f8fafc 0%,
-        #f4f6f8 100%
-    );
+    background: linear-gradient(180deg, #f8fafc 0%, #f4f6f8 100%);
     color: #172033;
 }
 

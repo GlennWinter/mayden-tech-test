@@ -6,13 +6,17 @@ use App\Http\Requests\StoreShoppingListItemRequest;
 use App\Http\Requests\UpdateShoppingListItemRequest;
 use App\Models\ShoppingList;
 use App\Models\ShoppingListItem;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 class ShoppingListItemController extends Controller
 {
-    public function index(ShoppingList $shoppingList): JsonResponse
+    /**
+     * @return Collection<int, ShoppingListItem>
+     */
+    public function index(ShoppingList $shoppingList): Collection
     {
-        return $shoppingList->items;
+        return $shoppingList->items()->get();
     }
 
     public function store(StoreShoppingListItemRequest $request, ShoppingList $shoppingList): JsonResponse

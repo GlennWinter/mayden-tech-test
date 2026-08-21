@@ -40,20 +40,17 @@ const largeText = ref(preferences.largeText);
 const reducedMotion = ref(preferences.reducedMotion);
 const increasedSpacing = ref(preferences.increasedSpacing);
 
-watch(
-    [highContrast, largeText, reducedMotion, increasedSpacing],
-    () => {
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({
-                highContrast: highContrast.value,
-                largeText: largeText.value,
-                reducedMotion: reducedMotion.value,
-                increasedSpacing: increasedSpacing.value,
-            }),
-        );
-    },
-);
+watch([highContrast, largeText, reducedMotion, increasedSpacing], () => {
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+            highContrast: highContrast.value,
+            largeText: largeText.value,
+            reducedMotion: reducedMotion.value,
+            increasedSpacing: increasedSpacing.value,
+        }),
+    );
+});
 
 export function useAccessibility() {
     return {

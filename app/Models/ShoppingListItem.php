@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\ShoppingListItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShoppingListItem extends Model
 {
@@ -23,7 +24,10 @@ class ShoppingListItem extends Model
         'is_purchased' => 'boolean',
     ];
 
-    public function shoppingList()
+    /**
+     * @return BelongsTo<ShoppingList, $this>
+     */
+    public function shoppingList(): BelongsTo
     {
         return $this->belongsTo(ShoppingList::class);
     }

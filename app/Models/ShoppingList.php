@@ -22,6 +22,9 @@ class ShoppingList extends Model
         'is_over_budget',
     ];
 
+    /**
+     * @return HasMany<ShoppingListItem, $this>
+     */
     public function items(): HasMany
     {
         return $this->hasMany(ShoppingListItem::class);
