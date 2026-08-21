@@ -10,7 +10,9 @@ use Illuminate\Http\JsonResponse;
 class ShoppingListController extends Controller
 {
     /**
-     * Gets all shopping lists for index page.
+     * List all shopping lists with their items eager-loaded, so each list
+     * includes its computed total_in_pence and is_over_budget attributes
+     * without triggering N+1 queries.
      */
     public function index(): JsonResponse
     {
@@ -21,7 +23,8 @@ class ShoppingListController extends Controller
     }
 
     /**
-     * Creates a shopping list.
+     * Create a new shopping list. name is required; budget_limit_in_pence
+     * is optional — a null budget means the list can never be "over budget".
      */
     public function store(StoreShoppingListRequest $request): JsonResponse
     {
@@ -31,7 +34,8 @@ class ShoppingListController extends Controller
     }
 
     /**
-     * Gets individual shopping list and items
+     * Get a single shopping list along with its items. 404s automatically
+     * via route-model binding if the ID doesn't exist.
      */
     public function show(ShoppingList $shoppingList): JsonResponse
     {
@@ -40,6 +44,11 @@ class ShoppingListController extends Controller
         return response()->json($shoppingList);
     }
 
+    /**
+     * Partially or fully update a shopping list's name and/or budget.
+     * All fields are optional (see UpdateShoppingListRequest) so this
+     * supports both full and partial updates from the same endpoint.
+     */
     public function update(UpdateShoppingListRequest $request, ShoppingList $shoppingList): JsonResponse
     {
         $shoppingList->update($request->validated());
@@ -47,6 +56,10 @@ class ShoppingListController extends Controller
         return response()->json($shoppingList);
     }
 
+    /**
+     * Delete a shopping list. Its items are removed automatically via
+     * the cascadeOnDelete() foreign key defined in the items migration.
+     */
     public function destroy(ShoppingList $shoppingList): JsonResponse
     {
         $shoppingList->delete();

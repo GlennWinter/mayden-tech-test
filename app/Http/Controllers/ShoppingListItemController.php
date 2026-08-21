@@ -12,13 +12,16 @@ use Illuminate\Http\JsonResponse;
 class ShoppingListItemController extends Controller
 {
     /**
-     * @return Collection<int, ShoppingListItem>
+     * List all items belonging to the given shopping list.
      */
     public function index(ShoppingList $shoppingList): Collection
     {
         return $shoppingList->items()->get();
     }
 
+    /**
+     * Add a new item to the given shopping list.
+     */
     public function store(StoreShoppingListItemRequest $request, ShoppingList $shoppingList): JsonResponse
     {
         $item = $shoppingList->items()->create(
@@ -27,7 +30,12 @@ class ShoppingListItemController extends Controller
 
         return response()->json($item, 201);
     }
-
+    /**
+     * Update an existing item. Route-model binding is scoped to the parent
+     * shopping list (see routes/api.php), so an item ID that belongs to a
+     * different list resolves to a 404 here rather than being editable
+     * cross-list.
+     */
     public function update(
         UpdateShoppingListItemRequest $request,
         ShoppingList $shoppingList,
@@ -40,6 +48,10 @@ class ShoppingListItemController extends Controller
 
     // todo: add show function for individual item to show picture and details
 
+    /**
+     * Remove an item from the given shopping list. Same scoped-binding
+     * protection as update() applies here.
+     */
     public function destroy(ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
     {
         $item->delete();
