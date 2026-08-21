@@ -1,10 +1,10 @@
 # Shopping List App
 
-## Scope
+### \### Scope
 
 **Timeframe:** 6 hours
 
-### Stories aiming to complete
+### \### Stories aiming to complete
 
 These directly fulfil the objectives stated in the brief's overview:
 
@@ -18,7 +18,7 @@ These directly fulfil the objectives stated in the brief's overview:
 
 
 
-### Stories not aiming to complete
+#### \### Stories not aiming to complete
 
 Deprioritised them due to time constraint and not mentioned in core objective:
 
@@ -26,7 +26,9 @@ Deprioritised them due to time constraint and not mentioned in core objective:
 7. I want to share my shopping list via email - Nice to have but doesn't affect the functionality of the requirements.
 8. User and password protect - Will take up a lot of the given timescale and is something that should be done properly — prioritising it risks the core functionality being incomplete.
 
-### Time estimates
+
+
+#### \### Time estimates
 
 |Stories|Estimate|
 |-|-|
@@ -44,16 +46,49 @@ Remainder of the 6 hours will be spent on tests, improving the frontend and addi
 
 
 
-### How to Install
+#### \### Requirements
 
-1. Clone project from https://github.com/GlennWinter/mayden-tech-test
-2. Open project directory in powershell
-3. Run "Composer Install"
-4. Run "Copy .env.example .env"
-5. Run "php artisan key:generate"
-6. Run "php artisan migrate" click yes when prompted
-7. Run "npm install"
-8. Run "npm run dev"
+\- PHP 8.3+
 
-From here you'll be able to create. view and delete a shopping list and change accessibility options. If you click view a shopping list, you'll be able to add items, see your budget, cross off items and also delete them.
+\- Composer 2.x
+
+\- Node 20+ and npm
+
+### 
+
+#### \### How to Install
+
+1\. Clone the project: `git clone https://github.com/GlennWinter/mayden-tech-test`
+
+2\. Open a terminal in the project directory
+
+3\. Run `composer install`
+
+4\. Copy the environment file: `cp .env.example .env` (Windows PowerShell: `copy .env.example .env`)
+
+5\. Run `php artisan key:generate`
+
+6\. Run `php artisan migrate` — say yes if prompted to create the SQLite database file
+
+7\. Run `npm install`
+
+8\. Run `composer dev` — this starts the PHP server, queue listener, and Vite dev server together
+
+9\. Visit http://localhost:8000
+
+
+
+###### From here you'll be able to create, view and delete a shopping list and change accessibility options. If you click into a shopping list, you'll be able to add items, see your budget, cross off items and also delete them.
+
+
+
+#### \### Running tests
+
+php artisan test
+
+
+
+#### \### Running all CI checks (lint, format, types, static analysis, tests)
+
+composer ci:check
 
