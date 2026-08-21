@@ -106,7 +106,10 @@ async function addItem() {
 
         if (!response.ok) {
             const data = await response.json().catch(() => null);
-            const message = data?.errors?.name?.[0] ?? data?.message ?? 'Unable to add item.';
+            const message =
+                data?.errors?.name?.[0] ??
+                data?.message ??
+                'Unable to add item.';
 
             throw new Error(message);
         }
@@ -121,7 +124,8 @@ async function addItem() {
 
         successMessage.value = `${item.name} added successfully.`;
     } catch (err) {
-        error.value = err instanceof Error ? err.message : 'Unable to add item.';
+        error.value =
+            err instanceof Error ? err.message : 'Unable to add item.';
     } finally {
         isAddingItem.value = false;
     }
@@ -257,7 +261,9 @@ onMounted(fetchShoppingList);
                 <section class="summary" aria-label="Shopping list summary">
                     <div class="summary-item">
                         <span>Total</span>
-                        <strong>{{ formatMoney(shoppingList.total_in_pence) }}</strong>
+                        <strong>{{
+                            formatMoney(shoppingList.total_in_pence)
+                        }}</strong>
                     </div>
 
                     <div
@@ -278,11 +284,13 @@ onMounted(fetchShoppingList);
                     >
                         <span>Remaining</span>
 
-                        <strong :class="{ negative: shoppingList.is_over_budget }">
+                        <strong
+                            :class="{ negative: shoppingList.is_over_budget }"
+                        >
                             {{
                                 formatMoney(
                                     shoppingList.budget_limit_in_pence -
-                                    shoppingList.total_in_pence,
+                                        shoppingList.total_in_pence,
                                 )
                             }}
                         </strong>
@@ -299,7 +307,7 @@ onMounted(fetchShoppingList);
                         {{
                             formatMoney(
                                 shoppingList.total_in_pence -
-                                (shoppingList.budget_limit_in_pence ?? 0),
+                                    (shoppingList.budget_limit_in_pence ?? 0),
                             )
                         }}
                     </strong>
@@ -443,7 +451,7 @@ onMounted(fetchShoppingList);
                                         {{
                                             formatMoney(
                                                 item.price_in_pence *
-                                                item.quantity,
+                                                    item.quantity,
                                             )
                                         }}
                                         total
