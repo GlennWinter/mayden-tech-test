@@ -127,7 +127,10 @@ async function addItem() {
         );
 
         if (!response.ok) {
-            throw new Error('Unable to add item.');
+            const data = await response.json().catch(() => null);
+            const message = data?.errors?.name?.[0] ?? data?.message ?? 'Unable to add item.';
+
+            throw new Error(message);
         }
 
         const item: ShoppingListItem = await response.json();
@@ -139,8 +142,8 @@ async function addItem() {
         itemQuantity.value = 1;
 
         successMessage.value = `${item.name} added successfully.`;
-    } catch {
-        error.value = 'Unable to add item.';
+    } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Unable to add item.';
     } finally {
         isAddingItem.value = false;
     }
