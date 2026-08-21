@@ -176,18 +176,12 @@ class ShoppingListItemTest extends TestCase
         $item = ShoppingListItem::factory()
             ->for($shoppingList)
             ->create([
-                'name' => 'Milk',
-                'quantity' => 1,
-                'price_in_pence' => 100,
                 'is_purchased' => false,
             ]);
 
         $response = $this->patchJson(
             "/api/shopping-lists/{$shoppingList->id}/items/{$item->id}",
             [
-                'name' => 'Whole Milk',
-                'quantity' => 2,
-                'price_in_pence' => 175,
                 'is_purchased' => true,
             ]
         );
@@ -195,17 +189,10 @@ class ShoppingListItemTest extends TestCase
         $response
             ->assertOk()
             ->assertJsonFragment([
-                'name' => 'Whole Milk',
-                'quantity' => 2,
-                'price_in_pence' => 175,
                 'is_purchased' => true,
             ]);
 
         $this->assertDatabaseHas('shopping_list_items', [
-            'id' => $item->id,
-            'name' => 'Whole Milk',
-            'quantity' => 2,
-            'price_in_pence' => 175,
             'is_purchased' => true,
         ]);
     }
@@ -217,9 +204,6 @@ class ShoppingListItemTest extends TestCase
         $item = ShoppingListItem::factory()
             ->for($shoppingList)
             ->create([
-                'name' => 'Milk',
-                'quantity' => 1,
-                'price_in_pence' => 100,
                 'is_purchased' => false,
             ]);
 
@@ -234,9 +218,6 @@ class ShoppingListItemTest extends TestCase
 
         $this->assertDatabaseHas('shopping_list_items', [
             'id' => $item->id,
-            'name' => 'Milk',
-            'quantity' => 1,
-            'price_in_pence' => 100,
             'is_purchased' => true,
         ]);
     }
@@ -299,5 +280,31 @@ class ShoppingListItemTest extends TestCase
         $this->assertDatabaseHas('shopping_list_items', [
             'id' => $item->id,
         ]);
+    }
+
+    public function test_duplicate_item_name_returns_validation_error(): void
+    {
+        $shoppingList = ShoppingList::factory()->create();
+
+        ShoppingListItem::factory()
+            ->for($shoppingList)
+            ->create([
+                'name' => 'Milk',
+            ]);
+
+        $response = $this->postJson(
+            "/api/shopping-lists/{$shoppingList->id}/items",
+            [
+                'name' => 'Milk',
+                'quantity' => 1,
+                'price_in_pence' => 100,
+            ]
+        );
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name']);
+
+        $this->assertDatabaseCount('shopping_list_items', 1);
     }
 }
