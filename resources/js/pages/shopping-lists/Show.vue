@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { Check, Plus, Trash2 } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import AccessibilitySettings from '@/components/AccessibilitySettings.vue';
 import { useAccessibility } from '@/composables/useAccessibility';
 
@@ -46,28 +46,6 @@ const isAddingItem = ref(false);
 
 const error = ref('');
 const successMessage = ref('');
-
-const total = computed(() => {
-    if (!shoppingList.value) {
-        return 0;
-    }
-
-    return shoppingList.value.items.reduce(
-        (sum, item) => sum + item.price_in_pence * item.quantity,
-        0,
-    );
-});
-
-const isOverBudget = computed(() => {
-    if (
-        !shoppingList.value ||
-        shoppingList.value.budget_limit_in_pence === null
-    ) {
-        return false;
-    }
-
-    return total.value > shoppingList.value.budget_limit_in_pence;
-});
 
 async function fetchShoppingList() {
     error.value = '';
@@ -135,7 +113,7 @@ async function addItem() {
 
         const item: ShoppingListItem = await response.json();
 
-        shoppingList.value.items.push(item);
+        await fetchShoppingList();
 
         itemName.value = '';
         itemPrice.value = null;
@@ -175,15 +153,9 @@ async function togglePurchased(item: ShoppingListItem) {
             throw new Error('Unable to update item.');
         }
 
-        const updatedItem: ShoppingListItem = await response.json();
+        await response.json();
 
-        const index = shoppingList.value.items.findIndex(
-            (shoppingListItem) => shoppingListItem.id === item.id,
-        );
-
-        if (index !== -1) {
-            shoppingList.value.items[index] = updatedItem;
-        }
+        await fetchShoppingList();
     } catch {
         error.value = 'Unable to update item.';
     }
@@ -220,9 +192,7 @@ async function deleteItem(item: ShoppingListItem) {
             throw new Error('Unable to delete item.');
         }
 
-        shoppingList.value.items = shoppingList.value.items.filter(
-            (shoppingListItem) => shoppingListItem.id !== item.id,
-        );
+        await fetchShoppingList();
 
         successMessage.value = `${item.name} removed successfully.`;
     } catch {
@@ -287,7 +257,7 @@ onMounted(fetchShoppingList);
                 <section class="summary" aria-label="Shopping list summary">
                     <div class="summary-item">
                         <span>Total</span>
-                        <strong>{{ formatMoney(total) }}</strong>
+                        <strong>{{ formatMoney(shoppingList.total_in_pence) }}</strong>
                     </div>
 
                     <div
@@ -308,23 +278,28 @@ onMounted(fetchShoppingList);
                     >
                         <span>Remaining</span>
 
-                        <strong :class="{ negative: isOverBudget }">
+                        <strong :class="{ negative: shoppingList.is_over_budget }">
                             {{
                                 formatMoney(
-                                    shoppingList.budget_limit_in_pence - total,
+                                    shoppingList.budget_limit_in_pence -
+                                    shoppingList.total_in_pence,
                                 )
                             }}
                         </strong>
                     </div>
                 </section>
 
-                <div v-if="isOverBudget" class="budget-warning" role="alert">
+                <div
+                    v-if="shoppingList.is_over_budget"
+                    class="budget-warning"
+                    role="alert"
+                >
                     You are over your budget by
                     <strong>
                         {{
                             formatMoney(
-                                total -
-                                    (shoppingList.budget_limit_in_pence ?? 0),
+                                shoppingList.total_in_pence -
+                                (shoppingList.budget_limit_in_pence ?? 0),
                             )
                         }}
                     </strong>
@@ -468,7 +443,7 @@ onMounted(fetchShoppingList);
                                         {{
                                             formatMoney(
                                                 item.price_in_pence *
-                                                    item.quantity,
+                                                item.quantity,
                                             )
                                         }}
                                         total
