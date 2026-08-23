@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ShoppingList;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreShoppingListRequest extends FormRequest
 {
@@ -18,9 +20,25 @@ class StoreShoppingListRequest extends FormRequest
      */
     public function rules(): array
     {
+        $shoppingList = $this->route('shopping_list');
+
+        if ($shoppingList !== null && ! $shoppingList instanceof ShoppingList) {
+            abort(404);
+        }
+
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'budget_limit_in_pence' => ['nullable', 'integer', 'min:0'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('shopping_lists', 'name')
+                    ->ignore($shoppingList?->id),
+            ],
+            'budget_limit_in_pence' => [
+                'nullable',
+                'integer',
+                'min:0',
+            ],
         ];
     }
 }

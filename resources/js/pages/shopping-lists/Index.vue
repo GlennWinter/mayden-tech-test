@@ -135,7 +135,13 @@ async function createShoppingList() {
         });
 
         if (!response.ok) {
-            throw new Error('Unable to create shopping list.');
+            const data = await response.json().catch(() => null);
+            const message =
+                data?.errors?.name?.[0] ??
+                data?.message ??
+                'Unable to create Shopping List.';
+
+            throw new Error(message);
         }
 
         const shoppingList: ShoppingList = await response.json();
@@ -147,8 +153,11 @@ async function createShoppingList() {
         newListName.value = '';
         newListBudget.value = null;
         showCreateForm.value = false;
-    } catch {
-        error.value = 'Unable to create shopping list.';
+    } catch (err) {
+        error.value =
+            err instanceof Error
+                ? err.message
+                : 'Unable to create shopping list.';
     } finally {
         isCreating.value = false;
     }
