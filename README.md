@@ -1,10 +1,10 @@
 # Shopping List App
 
-### \### Scope
+### Scope
 
 **Timeframe:** 6 hours
 
-### \### Stories aiming to complete
+### Stories aiming to complete
 
 These directly fulfil the objectives stated in the brief's overview:
 
@@ -18,7 +18,7 @@ These directly fulfil the objectives stated in the brief's overview:
 
 
 
-#### \### Stories not aiming to complete
+### Stories not aiming to complete
 
 Deprioritised them due to time constraint and not mentioned in core objective:
 
@@ -28,7 +28,7 @@ Deprioritised them due to time constraint and not mentioned in core objective:
 
 
 
-#### \### Time estimates
+### Time estimates
 
 |Stories|Estimate|
 |-|-|
@@ -46,17 +46,15 @@ Remainder of the 6 hours will be spent on tests, improving the frontend and addi
 
 
 
-#### \### Requirements
+### Requirements
 
-\- PHP 8.3+
+- PHP 8.3+ with the required PHP extensions enabled including SQLite
 
-\- Composer 2.x
+- Composer 2.x
 
-\- Node 20+ and npm
+- Node.js 20+ (includes npm)
 
-### 
-
-#### \### How to Install
+### How to Install
 
 1\. Clone the project: `git clone https://github.com/GlennWinter/mayden-tech-test`
 
@@ -78,21 +76,20 @@ Remainder of the 6 hours will be spent on tests, improving the frontend and addi
 
 
 
-###### From here you'll be able to create, view and delete a shopping list and change accessibility options. If you click into a shopping list, you'll be able to add items, see your budget, cross off items and also delete them.
+From here you'll be able to create, view and delete a shopping list and change accessibility options. If you click into a shopping list, you'll be able to add items, see your budget, cross off items and also delete them.
 
 
 
-#### \### Running tests
+### Running tests
 
 php artisan test
 
 
-
-#### \### Running all CI checks (lint, format, types, static analysis, tests)
+### Running all CI checks (lint, format, types, static analysis, tests)
 
 composer ci:check
 
-### \### Retrospective
+### Retrospective
 If I had more time, I would complete the remaining stories from the brief:
 
 -Reordering items: I would add a sort_order column to the shopping list items table and provide an endpoint for updating item positions. The interface could then support drag-and-drop reordering.
