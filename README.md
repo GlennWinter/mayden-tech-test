@@ -92,3 +92,46 @@ php artisan test
 
 composer ci:check
 
+### \### Retrospective
+If I had more time, I would complete the remaining stories from the brief:
+
+-Reordering items: I would add a sort_order column to the shopping list items table and provide an endpoint for updating item positions. The interface could then support drag-and-drop reordering.
+
+-Sharing a shopping list by email: I would use Laravel’s mail functionality to send the recipient a secure link to the shopping list. Depending on the access requirements, this could be implemented using a temporary signed URL.
+
+-User authentication and password protection: I would add user accounts and associate each shopping list with its owner. I would use Laravel Sanctum for authentication and authorisation policies to ensure users could only manage shopping lists they were permitted to access.
+
+### Future improvements:
+
+-Improve accessibility by adding further user preferences and testing the application using keyboard-only navigation, screen readers and automated WCAG auditing tools.
+
+-Improve frontend error handling by displaying clear validation and server-error messages, as well as adding loading and disabled states to prevent duplicate submissions.
+
+-Use Laravel’s centralised exception handling and logging, with targeted try/catch blocks for recoverable failures, such as an email failing to send.
+
+-Add application monitoring so unexpected errors can be identified and investigated more easily.
+
+-Add database indexes where appropriate and review queries for potential performance issues as the amount of data increases.
+
+-Add end-to-end tests for important user journeys, such as creating a list, adding items, updating the budget and deleting a list.
+
+-Refine the interface with clearer feedback, smoother interactions and more consistent styling.
+
+-As the application grows, I would introduce a shared styling structure for common design elements, such as colours, spacing, buttons and form controls. The current component-scoped styles are appropriate for the application’s present size, but centralising shared styles would help maintain consistency and make the interface easier to scale.
+
+### What I'd do better next time:
+
+-I would remove the unused files and dependencies included with the initial Laravel Herd installation earlier in the development process.
+
+-The task coincided with a pre-booked holiday, so I prioritised completing it during the shorter periods I had available. If circumstances allowed, I would complete a similar task in fewer, longer sessions to maintain continuity and reduce context switching.
+
+-I would document technical decisions, assumptions and API behaviour throughout development rather than leaving most of the documentation until the end.
+
+-I would run the complete CI checks throughout development rather than primarily towards the end, allowing formatting, type and linting issues to be identified earlier.
+
+
+### Final 
+
+I've really enjoyed working through the task and I'm looking forward to discussing my approach and the decisions I made.
+
+Thank you for your time, Glenn Winter
