@@ -40,7 +40,7 @@ class ShoppingListItemController extends Controller
      */
     public function update(
         UpdateShoppingListItemRequest $request,
-        ShoppingList $shoppingList,
+        ShoppingList $shoppingList, // Required for Laravel's scoped nested route binding.
         ShoppingListItem $item
     ): JsonResponse {
         $item->update($request->validated());
@@ -54,8 +54,10 @@ class ShoppingListItemController extends Controller
      * Remove an item from the given shopping list. Same scoped-binding
      * protection as update() applies here.
      */
-    public function destroy(ShoppingList $shoppingList, ShoppingListItem $item): JsonResponse
-    {
+    public function destroy(
+        ShoppingList $shoppingList, // Required for Laravel's scoped nested route binding.
+        ShoppingListItem $item
+    ): JsonResponse {
         $item->delete();
 
         return response()->json(null, 204);

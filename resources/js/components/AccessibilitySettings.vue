@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Settings } from 'lucide-vue-next';
+import { Settings } from '@lucide/vue';
 import { nextTick, ref } from 'vue';
 
 import { useAccessibility } from '@/composables/useAccessibility';

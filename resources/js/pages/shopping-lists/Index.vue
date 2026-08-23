@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Trash2 } from 'lucide-vue-next';
+import { Trash2 } from '@lucide/vue';
 import { nextTick, onMounted, ref } from 'vue';
 import AccessibilitySettings from '@/components/AccessibilitySettings.vue';
 import { useAccessibility } from '@/composables/useAccessibility';
@@ -553,7 +553,6 @@ onMounted(fetchShoppingLists);
 }
 
 .primary-button,
-.icon-button,
 .view-button,
 .delete-button {
     transition:
@@ -595,26 +594,6 @@ onMounted(fetchShoppingLists);
 .plus {
     font-size: 20px;
     line-height: 1;
-}
-
-.icon-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 46px;
-    height: 46px;
-    padding: 0;
-    border: 1px solid #d8dee8;
-    border-radius: 10px;
-    background: #fff;
-    color: #475467;
-    cursor: pointer;
-}
-
-.icon-button:hover {
-    background: #f8fafc;
-    color: #172033;
-    border-color: #c6ceda;
 }
 
 .create-card {

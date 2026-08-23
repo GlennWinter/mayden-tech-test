@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Check, Plus, Trash2 } from 'lucide-vue-next';
+import { Check, Plus, Trash2 } from '@lucide/vue';
 import { onMounted, ref } from 'vue';
 import AccessibilitySettings from '@/components/AccessibilitySettings.vue';
 import { useAccessibility } from '@/composables/useAccessibility';
@@ -47,6 +47,7 @@ const isAddingItem = ref(false);
 const error = ref('');
 const successMessage = ref('');
 
+// Get shopping list and items
 async function fetchShoppingList() {
     error.value = '';
 
@@ -72,6 +73,7 @@ async function fetchShoppingList() {
     }
 }
 
+// Add item to a shopping list
 async function addItem() {
     if (!shoppingList.value || !itemName.value.trim()) {
         return;
@@ -131,6 +133,7 @@ async function addItem() {
     }
 }
 
+// Mark item as purchased
 async function togglePurchased(item: ShoppingListItem) {
     if (!shoppingList.value) {
         return;
@@ -165,6 +168,7 @@ async function togglePurchased(item: ShoppingListItem) {
     }
 }
 
+// Remove item from shopping list
 async function deleteItem(item: ShoppingListItem) {
     if (!shoppingList.value) {
         return;
@@ -204,6 +208,7 @@ async function deleteItem(item: ShoppingListItem) {
     }
 }
 
+// Returns money in correct format
 function formatMoney(value: number) {
     return `£${(value / 100).toFixed(2)}`;
 }
@@ -496,11 +501,6 @@ onMounted(fetchShoppingList);
     justify-content: space-between;
     gap: 24px;
     margin-bottom: 30px;
-}
-
-.header-content {
-    min-width: 0;
-    flex: 1;
 }
 
 .back-link {
